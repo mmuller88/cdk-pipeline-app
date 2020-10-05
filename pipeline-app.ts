@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 import { App, AppProps, Construct } from '@aws-cdk/core';
 import { PipelineStackProps, PipelineStack } from './pipeline-stack';
-import { Account } from './accountConfig';
 import { CustomStack } from './custom-stack';
 
-import { devAccount, prodAccount } from './accountConfig';
+import { Account, devAccount, prodAccount } from './accountConfig';
 
 export interface PipelineAppProps extends AppProps {
   // customStage: Stage;

@@ -20,8 +20,6 @@ export class CustomStage extends Stage {
   constructor(scope: Construct, id: string, props: CustomStageProps, account: Account) {
     super(scope, id, props);
 
-    account;
-
     const customStack = props.customStack.call(this, this, account);
 
     this.cfnOutputs = customStack.cfnOutputs;
