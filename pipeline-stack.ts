@@ -107,6 +107,7 @@ export class PipelineStack extends Stack {
 
       preprodStage.addActions(new ShellScriptAction({
         actionName: 'TestCustomStack',
+        additionalArtifacts: [sourceArtifact],
         useOutputs,
         // {
         //   // Get the stack Output from the Stage and make it available in
