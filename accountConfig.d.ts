@@ -9,5 +9,8 @@ export interface Account {
     acmCertRef: string;
     hostedZoneId: string;
     zoneName: string;
-    vpcId: string;
+    vpc: {
+        vpcId: string;
+        availabilityZones: string[];
+    };
 }
