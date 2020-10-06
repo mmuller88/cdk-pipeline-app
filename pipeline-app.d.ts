@@ -6,6 +6,7 @@ export interface PipelineAppProps extends AppProps {
     customStack: (scope: Construct, account: Account) => CustomStack;
     branch: string;
     repositoryName: string;
+    destroyStack?: boolean;
     testCommands: (account: Account) => string[];
 }
 export declare class PipelineApp extends App {
