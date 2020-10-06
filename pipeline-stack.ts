@@ -16,6 +16,7 @@ export interface PipelineStackProps extends StackProps {
   // customStack: CustomStack;
   branch: string;
   repositoryName: string;
+  destroyStack?: boolean;
   testCommands: (account: Account) => string[];
 }
 
@@ -110,12 +111,12 @@ export class PipelineStack extends Stack {
         useOutputs,
         commands: props.testCommands.call(this, account),
         runOrder: preprodStage.nextSequentialRunOrder(),
-      }), new CloudFormationDeleteStackAction({
+      }), ...(props.destroyStack ? [new CloudFormationDeleteStackAction({
         actionName: 'DestroyStack',
         stackName: `${props.repositoryName}-${account.stage}`,
         adminPermissions: true,
-        runOrder: preprodStage.nextSequentialRunOrder(),
-      }));
+        runOrder: preprodStage.nextSequentialRunOrder()
+      })] : []));
     }
   }
 }
