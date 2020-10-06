@@ -12,15 +12,16 @@
     "versionAsMinor": "standard-version --release-as minor"
   },
   "dependencies": {
-    "@aws-cdk/aws-cloudfront": "^1.66.0",
+    "@aws-cdk/aws-cloudfront": "1.66.0",
     "@aws-cdk/aws-codebuild": "1.66.0",
     "@aws-cdk/aws-codecommit": "1.66.0",
     "@aws-cdk/aws-codedeploy": "1.66.0",
     "@aws-cdk/aws-codepipeline": "1.66.0",
     "@aws-cdk/aws-codepipeline-actions": "1.66.0",
     "@aws-cdk/aws-ec2": "1.66.0",
+    "@aws-cdk/aws-elasticloadbalancingv2-targets": "1.66.0",
     "@aws-cdk/aws-iam": "1.66.0",
-    "@aws-cdk/aws-lambda": "^1.66.0",
+    "@aws-cdk/aws-lambda": "1.66.0",
     "@aws-cdk/aws-lambda-event-sources": "1.66.0",
     "@aws-cdk/aws-route53": "1.66.0",
     "@aws-cdk/aws-route53-targets": "1.66.0",
