@@ -16,7 +16,7 @@ export interface PipelineStackProps extends StackProps {
   // customStack: CustomStack;
   branch: string;
   repositoryName: string;
-  commands: string[];
+  testCommands: (account: Account) => string[];
 }
 
 export class PipelineStack extends Stack {
@@ -99,22 +99,22 @@ export class PipelineStack extends Stack {
       const preprodStage = cdkPipeline.addApplicationStage(customStage, { manualApprovals: true });
 
       
-      var useOutputs: Record<string, StackOutput> = {};
+      let useOutputs: Record<string, StackOutput> = {};
 
-      for(let cfnOutput in customStage.cfnOutputs){
+      for(const cfnOutput in customStage.cfnOutputs){
         useOutputs[cfnOutput] = cdkPipeline.stackOutput(customStage.cfnOutputs[cfnOutput]);
       }
 
       preprodStage.addActions(new ShellScriptAction({
         actionName: 'TestCustomStack',
-        useOutputs: useOutputs,
+        useOutputs,
         // {
         //   // Get the stack Output from the Stage and make it available in
         //   // the shell script as $ENDPOINT_URL.
         //   ENDPOINT_URL: cdkPipeline.stackOutput(customStage.cfnOutputs.get('domainName') || new CfnOutput(this, 'empty', {value:''})),
         // }
         // ,
-        commands: props.commands,
+        commands: props.testCommands.call(this, account),
       }));
     }
   }

@@ -10,7 +10,7 @@ export interface PipelineAppProps extends AppProps {
   customStack: (scope: Construct, account: Account) => CustomStack;
   branch: string;
   repositoryName: string;
-  testCommands: string[];
+  testCommands: (account: Account) => string[];
 }
 
 export class PipelineApp extends App {
@@ -33,7 +33,7 @@ export class PipelineApp extends App {
       },
       branch: props.branch,
       repositoryName: props.repositoryName,
-      commands: props.testCommands,
+      testCommands: props.testCommands,
     };
     console.info(`pipelineStackProps: ${JSON.stringify(pipelineStackProps, null, 2)}`);
 
