@@ -52,7 +52,7 @@ export class PipelineStack extends Stack {
         actionName: 'GithubSource',
         branch: props.branch,
         owner: 'mmuller88',
-        repo: 'alf-cdk-ui',
+        repo: props.repositoryName,
         oauthToken: oauth,
         output: sourceArtifact,
       }),
