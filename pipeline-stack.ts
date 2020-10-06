@@ -107,19 +107,14 @@ export class PipelineStack extends Stack {
 
       preprodStage.addActions(new ShellScriptAction({
         actionName: 'TestCustomStack',
-        additionalArtifacts: [sourceArtifact],
         useOutputs,
-        // {
-        //   // Get the stack Output from the Stage and make it available in
-        //   // the shell script as $ENDPOINT_URL.
-        //   ENDPOINT_URL: cdkPipeline.stackOutput(customStage.cfnOutputs.get('domainName') || new CfnOutput(this, 'empty', {value:''})),
-        // }
-        // ,
         commands: props.testCommands.call(this, account),
+        runOrder: preprodStage.nextSequentialRunOrder(),
       }), new CloudFormationDeleteStackAction({
         actionName: 'DestroyStack',
         stackName: `${props.repositoryName}-${account.stage}`,
         adminPermissions: true,
+        runOrder: preprodStage.nextSequentialRunOrder(),
       }));
     }
   }
