@@ -9,4 +9,5 @@ export interface Account {
     acmCertRef: string;
     hostedZoneId: string;
     zoneName: string;
+    vpcId: string;
 }
