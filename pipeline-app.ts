@@ -11,6 +11,7 @@ export interface PipelineAppProps extends AppProps {
   branch: string;
   repositoryName: string;
   destroyStack?: boolean;
+  manualApprovals?: boolean;
   testCommands: (account: Account) => string[];
 }
 
@@ -35,6 +36,7 @@ export class PipelineApp extends App {
       branch: props.branch,
       repositoryName: props.repositoryName,
       destroyStack: props.destroyStack,
+      manualApprovals: props.manualApprovals,
       testCommands: props.testCommands,
     };
     console.info(`pipelineStackProps: ${JSON.stringify(pipelineStackProps, null, 2)}`);
