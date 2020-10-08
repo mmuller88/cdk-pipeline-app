@@ -7,6 +7,7 @@ export interface PipelineAppProps extends AppProps {
     branch: string;
     repositoryName: string;
     destroyStack?: boolean;
+    manualApprovals?: boolean;
     testCommands: (account: Account) => string[];
 }
 export declare class PipelineApp extends App {

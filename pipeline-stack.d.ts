@@ -6,6 +6,7 @@ export interface PipelineStackProps extends StackProps {
     branch: string;
     repositoryName: string;
     destroyStack?: boolean;
+    manualApprovals?: boolean;
     testCommands: (account: Account) => string[];
 }
 export declare class PipelineStack extends Stack {
