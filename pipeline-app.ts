@@ -10,8 +10,8 @@ export interface PipelineAppProps extends AppProps {
   customStack: (scope: Construct, account: Account) => CustomStack;
   branch: string;
   repositoryName: string;
-  destroyStack?: boolean;
-  manualApprovals?: boolean;
+  destroyStack?: (account: Account) => boolean;
+  manualApprovals?: (account: Account) => boolean;
   testCommands: (account: Account) => string[];
 }
 

@@ -16,8 +16,8 @@ export interface PipelineStackProps extends StackProps {
   // customStack: CustomStack;
   branch: string;
   repositoryName: string;
-  destroyStack?: boolean;
-  manualApprovals?: boolean;
+  destroyStack?: (account: Account) => boolean;
+  manualApprovals?: (account: Account) => boolean;
   testCommands: (account: Account) => string[];
 }
 
@@ -98,7 +98,7 @@ export class PipelineStack extends Stack {
 
       // console.log('customStage = ' + customStage);
 
-      const preprodStage = cdkPipeline.addApplicationStage(customStage, { manualApprovals: props.manualApprovals === undefined ? true : props.manualApprovals });
+      const preprodStage = cdkPipeline.addApplicationStage(customStage, { manualApprovals: props.manualApprovals?.call(this, account) || true });
 
       const useOutputs: Record<string, StackOutput> = {};
 
@@ -112,7 +112,7 @@ export class PipelineStack extends Stack {
         useOutputs,
         commands: props.testCommands.call(this, account),
         runOrder: preprodStage.nextSequentialRunOrder(),
-      }), ...(props.destroyStack ? [new CloudFormationDeleteStackAction({
+      }), ...(props.destroyStack?.call(this, account) ? [new CloudFormationDeleteStackAction({
         actionName: 'DestroyStack',
         stackName: `${props.repositoryName}-${account.stage}`,
         adminPermissions: true,

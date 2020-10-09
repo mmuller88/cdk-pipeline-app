@@ -5,8 +5,8 @@ export interface PipelineStackProps extends StackProps {
     customStack: (scope: Construct, account: Account) => CustomStack;
     branch: string;
     repositoryName: string;
-    destroyStack?: boolean;
-    manualApprovals?: boolean;
+    destroyStack?: (account: Account) => boolean;
+    manualApprovals?: (account: Account) => boolean;
     testCommands: (account: Account) => string[];
 }
 export declare class PipelineStack extends Stack {
