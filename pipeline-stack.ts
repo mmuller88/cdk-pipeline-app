@@ -98,7 +98,7 @@ export class PipelineStack extends Stack {
 
       // console.log('customStage = ' + customStage);
 
-      const preprodStage = cdkPipeline.addApplicationStage(customStage, { manualApprovals: props.manualApprovals?.call(this, account) || true });
+      const preprodStage = cdkPipeline.addApplicationStage(customStage, { manualApprovals: props.manualApprovals?.call(this, account) });
 
       const useOutputs: Record<string, StackOutput> = {};
 
