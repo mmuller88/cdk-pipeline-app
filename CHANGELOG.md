@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://github.com/mmuller88/alf-cdk-app-pipeline/compare/v0.0.4...v0.0.5) (2020-10-09)
+
+
+### Features
+
+* install @aws-solutions-constructs/aws-sqs-lambda ([4d9eb8b](https://github.com/mmuller88/alf-cdk-app-pipeline/commit/4d9eb8b4b2b1ed60651e44ebc7ba7d07f72317b7))
+* install @aws-solutions-constructs/stepfuncitons ([867c07e](https://github.com/mmuller88/alf-cdk-app-pipeline/commit/867c07eb06a2bb0c6efb0c923a7f2028d702ec47))
+* install some solutions constructs ([1978b85](https://github.com/mmuller88/alf-cdk-app-pipeline/commit/1978b85bf0e675b0cf71991f3def4b0d60aebc5f))
+* skip approval prop ([74799df](https://github.com/mmuller88/alf-cdk-app-pipeline/commit/74799df14458b38b654968b9124a670335e136e3))
+* skip approval prop ([7048ada](https://github.com/mmuller88/alf-cdk-app-pipeline/commit/7048ada693376ee1f7a346d5ddf82d0ad74f228b))
+* skip approval prop ([ddc9fda](https://github.com/mmuller88/alf-cdk-app-pipeline/commit/ddc9fda30b32788179247b366e747e26a0d49758))
+* skip approval prop ([e1b0548](https://github.com/mmuller88/alf-cdk-app-pipeline/commit/e1b05484a957ca10e971d29dd09d50c8a4176b18))
+
 ### [0.0.4](https://github.com/mmuller88/alf-cdk-app-pipeline/compare/v0.0.3...v0.0.4) (2020-10-07)
 
 
