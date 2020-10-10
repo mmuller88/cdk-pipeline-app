@@ -108,6 +108,7 @@ export class PipelineStack extends Stack {
       }
 
       preprodStage.addActions(new ShellScriptAction({
+        additionalArtifacts: [sourceArtifact],
         actionName: 'TestCustomStack',
         useOutputs,
         commands: props.testCommands.call(this, account),
