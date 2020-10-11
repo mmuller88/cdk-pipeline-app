@@ -1,6 +1,6 @@
 import { Artifact, Pipeline } from '@aws-cdk/aws-codepipeline';
 import { CloudFormationDeleteStackAction, GitHubSourceAction } from '@aws-cdk/aws-codepipeline-actions';
-import { App, Stack, StackProps, SecretValue, Tags, Construct } from '@aws-cdk/core';
+import { App, Stack, StackProps, SecretValue, Tags, Construct, CfnOutput } from '@aws-cdk/core';
 import { CdkPipeline, ShellScriptAction, SimpleSynthAction, StackOutput } from "@aws-cdk/pipelines";
 import { AutoDeleteBucket } from '@mobileposse/auto-delete-bucket';
 import { dependencies } from './package.json';
@@ -18,7 +18,7 @@ export interface PipelineStackProps extends StackProps {
   repositoryName: string;
   destroyStack?: (account: Account) => boolean;
   manualApprovals?: (account: Account) => boolean;
-  testCommands: (account: Account, cfnOutputs: Record<string, String>) => string[];
+  testCommands: (account: Account, cfnOutputs: Record<string, CfnOutput>) => string[];
 }
 
 export class PipelineStack extends Stack {
@@ -90,12 +90,12 @@ export class PipelineStack extends Stack {
       const preprodStage = cdkPipeline.addApplicationStage(customStage, { manualApprovals: props.manualApprovals?.call(this, account) });
 
       const useOutputs: Record<string, StackOutput> = {};
-      const useValueOutputs: Record<string, String> = {};
+      const useValueOutputs: Record<string, CfnOutput> = {};
 
       // tslint:disable-next-line: forin
       for(const cfnOutput in customStage.cfnOutputs){
         useOutputs[cfnOutput] = cdkPipeline.stackOutput(customStage.cfnOutputs[cfnOutput]);
-        useValueOutputs[cfnOutput] = new String(customStage.cfnOutputs[cfnOutput].value);
+        useValueOutputs[cfnOutput] = customStage.cfnOutputs[cfnOutput];
       }
 
       const testStage = cdkPipeline.addStage('TestCustomStack');
