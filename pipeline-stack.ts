@@ -5,20 +5,20 @@ import { CdkPipeline, ShellScriptAction, SimpleSynthAction, StackOutput } from "
 import { AutoDeleteBucket } from '@mobileposse/auto-delete-bucket';
 import { dependencies } from './package.json';
 import { CustomStage } from './custom-stage';
-import { Account, devAccount, prodAccount } from './accountConfig';
+import { Account } from './accountConfig';
 import { CustomStack } from './custom-stack';
-
 
 
 export interface PipelineStackProps extends StackProps {
   // customStage: Stage;
   customStack: (scope: Construct, account: Account) => CustomStack;
   // customStack: CustomStack;
+  accounts: Account[];
   branch: string;
   repositoryName: string;
   destroyStack?: (account: Account) => boolean;
   manualApprovals?: (account: Account) => boolean;
-  testCommands: (account: Account) => string[];
+  testCommands: (account: Account, useOutputs: Record<string, StackOutput>) => string[];
 }
 
 export class PipelineStack extends Stack {
@@ -72,18 +72,7 @@ export class PipelineStack extends Stack {
     });
 
     // todo: add devAccount later
-    for (const account of [devAccount, prodAccount]) {
-      // const customStackProps : CustomStackProps = {
-      //   stage: account.stage,
-      //   domainName: account.domainName,
-      //   acmCertRef: account.acmCertRef,
-      //   subDomain: account.subDomain,
-      //   stackName: `${props.repositoryName}-${account.stage}`,
-      //   hostedZoneId: account.hostedZoneId,
-      //   zoneName: account.zoneName,
-      //   // subDomain: account.subDomain,
-      // }
-      // console.info(`${account.stage} CustomStackProps: ${JSON.stringify(customStackProps, null, 2)}`);
+    for (const account of props.accounts) {
 
       const customStage = new CustomStage(this, `CustomStage-${account.stage}`, {
         customStack: props.customStack,
@@ -111,7 +100,7 @@ export class PipelineStack extends Stack {
         additionalArtifacts: [sourceArtifact],
         actionName: 'TestCustomStack',
         useOutputs,
-        commands: props.testCommands.call(this, account),
+        commands: props.testCommands.call(this, account, useOutputs),
         runOrder: preprodStage.nextSequentialRunOrder(),
       }), ...(props.destroyStack?.call(this, account) ? [new CloudFormationDeleteStackAction({
         actionName: 'DestroyStack',

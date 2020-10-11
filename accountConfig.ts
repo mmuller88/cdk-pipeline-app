@@ -1,8 +1,10 @@
 
-export const prodAccount: Account = {
-  id: '981237193288',
-  region: 'us-east-1',
-  stage: 'prod',
+export const sharedProdAccountProps: SharedAccountProps = {
+  account: {
+    id: '981237193288',
+    region: 'us-east-1',
+    stage: 'prod',
+  },
   domainName: 'alfpro.net',
   subDomain: 'app',
   acmCertRef: 'arn:aws:acm:us-east-1:981237193288:certificate/62010fca-125e-4780-8d71-7d745ff91789',
@@ -14,10 +16,12 @@ export const prodAccount: Account = {
   },
 }
 
-export const devAccount: Account = {
-  id: '981237193288',
-  region: 'eu-central-1',
-  stage: 'dev',
+export const sharedDevAccountProps: SharedAccountProps = {
+  account: {
+    id: '981237193288',
+    region: 'eu-central-1',
+    stage: 'dev',
+  },
   domainName: 'dev.alfpro.net',
   subDomain: 'app',
   acmCertRef: 'arn:aws:acm:us-east-1:981237193288:certificate/f605dd8c-4ae3-4c1b-9471-4b152e0f8846',
@@ -33,6 +37,10 @@ export interface Account {
   id: string;
   region: string;
   stage: string;
+}
+
+export interface SharedAccountProps {
+  account: Account;
   domainName: string;
   subDomain: string;
   acmCertRef: string;

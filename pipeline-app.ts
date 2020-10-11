@@ -3,16 +3,19 @@ import { App, AppProps, Construct } from '@aws-cdk/core';
 import { PipelineStackProps, PipelineStack } from './pipeline-stack';
 import { CustomStack } from './custom-stack';
 
-import { Account, devAccount, prodAccount } from './accountConfig';
+import { Account } from './accountConfig';
+import { StackOutput } from '@aws-cdk/pipelines';
 
 export interface PipelineAppProps extends AppProps {
   // customStage: Stage;
+  accounts: Account[];
+  buildAccount: Account;
   customStack: (scope: Construct, account: Account) => CustomStack;
   branch: string;
   repositoryName: string;
   destroyStack?: (account: Account) => boolean;
   manualApprovals?: (account: Account) => boolean;
-  testCommands: (account: Account) => string[];
+  testCommands: (account: Account, useOutputs: Record<string, StackOutput>) => string[];
 }
 
 export class PipelineApp extends App {
@@ -20,7 +23,8 @@ export class PipelineApp extends App {
     super(props);
     // Tags.of(this).add('Project', props.repositoryName);
 
-    for(const account of [devAccount, prodAccount]) {
+    // tslint:disable-next-line: forin
+    for(const account of props.accounts) {
       props.customStack.call(this, this, account);
     }
 
@@ -30,11 +34,12 @@ export class PipelineApp extends App {
       //   return props.customStack(this, account);
       // },
       env: {
-        account: devAccount.id,
-        region: devAccount.region,
+        account: props.buildAccount.id,
+        region: props.buildAccount.region,
       },
       branch: props.branch,
       repositoryName: props.repositoryName,
+      accounts: props.accounts,
       destroyStack: props.destroyStack,
       manualApprovals: props.manualApprovals,
       testCommands: props.testCommands,
