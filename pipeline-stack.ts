@@ -18,7 +18,7 @@ export interface PipelineStackProps extends StackProps {
   repositoryName: string;
   destroyStack?: (account: Account) => boolean;
   manualApprovals?: (account: Account) => boolean;
-  testCommands: (account: Account, cfnOutputs: Record<string, CfnOutput>) => string[];
+  testCommands: (account: Account, cfnOutputs: Record<string, string>) => string[];
 }
 
 export class PipelineStack extends Stack {
@@ -74,10 +74,9 @@ export class PipelineStack extends Stack {
     // todo: add devAccount later
     for (const account of props.accounts) {
 
-      const useValueOutputs2: Record<string, CfnOutput> = {};
+      // const useValueOutputs2: Record<string, CfnOutput> = {};
 
       const customStage = new CustomStage(this, `CustomStage-${account.stage}`, {
-        cfnOutputs: useValueOutputs2,
         customStack: props.customStack,
         // customStack: (_scope, account) => {
         //   return props.customStack(this, account);
@@ -107,7 +106,7 @@ export class PipelineStack extends Stack {
         actionName: 'TestCustomStack',
         useOutputs,
         // commands: [],
-        commands: props.testCommands.call(this, account, useValueOutputs),
+        commands: props.testCommands.call(this, account, customStage.stringOutputs),
         // commands: props.testCommands.call(this, account, customStage.cfnOutputs),
         runOrder: preprodStage.nextSequentialRunOrder(),
       }), ...(props.destroyStack?.call(this, account) ? [new CloudFormationDeleteStackAction({

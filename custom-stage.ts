@@ -8,7 +8,6 @@ import { CustomStack } from './custom-stack';
 export interface CustomStageProps extends StageProps {
   // stackProps: CustomStackProps;
   customStack: (scope: Construct, account: Account) => CustomStack;
-  cfnOutputs: Record<string, CfnOutput>;
 }
 /**
  * Deployable unit of web service app
@@ -16,6 +15,7 @@ export interface CustomStageProps extends StageProps {
 export class CustomStage extends Stage {
   // cfnOutputs: Map<string, CfnOutput> = new Map();
   cfnOutputs: Record<string, CfnOutput> = {};
+  stringOutputs: Record<string, string> = {};
 
   constructor(scope: Construct, id: string, props: CustomStageProps, account: Account) {
     super(scope, id, props);
@@ -25,6 +25,7 @@ export class CustomStage extends Stage {
     // tslint:disable-next-line: forin
     for(const key in customStack.cfnOutputs){
       this.cfnOutputs[key] = customStack.cfnOutputs[key];
+      this.stringOutputs[key] = customStack.cfnOutputs[key].value;
     }
 
     // this.cfnOutputs = customStack.cfnOutputs;
