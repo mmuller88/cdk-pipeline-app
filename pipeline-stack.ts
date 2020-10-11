@@ -79,10 +79,10 @@ export class PipelineStack extends Stack {
         // customStack: (_scope, account) => {
         //   return props.customStack(this, account);
         // },
-        env: {
-          account: account.id,
-          region: account.region,
-        }
+        // env: {
+        //   account: account.id,
+        //   region: account.region,
+        // }
       }, account);
 
       // console.log('customStage = ' + customStage);
