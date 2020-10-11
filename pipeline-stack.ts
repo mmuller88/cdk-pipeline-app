@@ -107,7 +107,7 @@ export class PipelineStack extends Stack {
         actionName: 'TestCustomStack',
         useOutputs,
         // commands: [],
-        commands: props.testCommands.call(this, account, useValueOutputs2),
+        commands: props.testCommands.call(this, account, useValueOutputs),
         // commands: props.testCommands.call(this, account, customStage.cfnOutputs),
         runOrder: preprodStage.nextSequentialRunOrder(),
       }), ...(props.destroyStack?.call(this, account) ? [new CloudFormationDeleteStackAction({

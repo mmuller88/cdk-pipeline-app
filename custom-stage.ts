@@ -22,6 +22,11 @@ export class CustomStage extends Stage {
 
     const customStack = props.customStack.call(this, this, account);
 
-    props.cfnOutputs = customStack.cfnOutputs;
+    // tslint:disable-next-line: forin
+    for(const key in customStack.cfnOutputs){
+      this.cfnOutputs[key] = customStack.cfnOutputs[key];
+    }
+
+    // this.cfnOutputs = customStack.cfnOutputs;
   }
 }
