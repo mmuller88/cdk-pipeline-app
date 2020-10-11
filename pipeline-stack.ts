@@ -95,7 +95,7 @@ export class PipelineStack extends Stack {
       // tslint:disable-next-line: forin
       for(const cfnOutput in customStage.cfnOutputs){
         useOutputs[cfnOutput] = cdkPipeline.stackOutput(customStage.cfnOutputs[cfnOutput]);
-        useValueOutputs[cfnOutput] = new String(customStage.cfnOutputs);
+        useValueOutputs[cfnOutput] = new String(customStage.cfnOutputs[cfnOutput]);
       }
 
       preprodStage.addActions(new ShellScriptAction({
