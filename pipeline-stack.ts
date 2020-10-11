@@ -18,7 +18,7 @@ export interface PipelineStackProps extends StackProps {
   repositoryName: string;
   destroyStack?: (account: Account) => boolean;
   manualApprovals?: (account: Account) => boolean;
-  testCommands: (account: Account, cfnOutputs: Record<string, string>) => string[];
+  testCommands: (account: Account, cfnOutputs: Record<string, String>) => string[];
 }
 
 export class PipelineStack extends Stack {
@@ -90,12 +90,12 @@ export class PipelineStack extends Stack {
       const preprodStage = cdkPipeline.addApplicationStage(customStage, { manualApprovals: props.manualApprovals?.call(this, account) });
 
       const useOutputs: Record<string, StackOutput> = {};
-      const useValueOutputs: Record<string, string> = {};
+      const useValueOutputs: Record<string, String> = {};
 
       // tslint:disable-next-line: forin
       for(const cfnOutput in customStage.cfnOutputs){
         useOutputs[cfnOutput] = cdkPipeline.stackOutput(customStage.cfnOutputs[cfnOutput]);
-        // useValueOutputs[cfnOutput] = customStage.cfnOutputs[cfnOutput].value;
+        useValueOutputs[cfnOutput] = new String(customStage.cfnOutputs[cfnOutput].value);
       }
 
       preprodStage.addActions(new ShellScriptAction({

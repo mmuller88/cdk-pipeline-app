@@ -8,7 +8,7 @@ export interface PipelineStackProps extends StackProps {
     repositoryName: string;
     destroyStack?: (account: Account) => boolean;
     manualApprovals?: (account: Account) => boolean;
-    testCommands: (account: Account, cfnOutputs: Record<string, string>) => string[];
+    testCommands: (account: Account, cfnOutputs: Record<string, String>) => string[];
 }
 export declare class PipelineStack extends Stack {
     constructor(app: App, id: string, props: PipelineStackProps);
