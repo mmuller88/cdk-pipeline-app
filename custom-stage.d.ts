@@ -3,6 +3,7 @@ import { Account } from './accountConfig';
 import { CustomStack } from './custom-stack';
 export interface CustomStageProps extends StageProps {
     customStack: (scope: Construct, account: Account) => CustomStack;
+    cfnOutputs: Record<string, CfnOutput>;
 }
 /**
  * Deployable unit of web service app

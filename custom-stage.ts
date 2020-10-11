@@ -8,7 +8,7 @@ import { CustomStack } from './custom-stack';
 export interface CustomStageProps extends StageProps {
   // stackProps: CustomStackProps;
   customStack: (scope: Construct, account: Account) => CustomStack;
-  // customStack: CustomStack;
+  cfnOutputs: Record<string, CfnOutput>;
 }
 /**
  * Deployable unit of web service app
@@ -22,6 +22,6 @@ export class CustomStage extends Stage {
 
     const customStack = props.customStack.call(this, this, account);
 
-    this.cfnOutputs = customStack.cfnOutputs;
+    props.cfnOutputs = customStack.cfnOutputs;
   }
 }
