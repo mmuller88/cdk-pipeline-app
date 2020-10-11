@@ -24,8 +24,8 @@ export class CustomStage extends Stage {
 
     // tslint:disable-next-line: forin
     for(const key in customStack.cfnOutputs){
-      this.cfnOutputs[key] = customStack.cfnOutputs[key];
-      this.stringOutputs[key] = customStack.cfnOutputs[key].value;
+      // this.cfnOutputs[key] = customStack.cfnOutputs[key];
+      this.stringOutputs[key] = customStack.cfnOutputs[key];
     }
 
     // this.cfnOutputs = customStack.cfnOutputs;
