@@ -1,6 +1,6 @@
 import { Artifact, Pipeline } from '@aws-cdk/aws-codepipeline';
 import { CloudFormationDeleteStackAction, GitHubSourceAction } from '@aws-cdk/aws-codepipeline-actions';
-import { App, Stack, StackProps, SecretValue, Tags, Construct } from '@aws-cdk/core';
+import { App, Stack, StackProps, SecretValue, Tags, Construct, CfnOutput } from '@aws-cdk/core';
 import { CdkPipeline, ShellScriptAction, SimpleSynthAction, StackOutput } from "@aws-cdk/pipelines";
 import { AutoDeleteBucket } from '@mobileposse/auto-delete-bucket';
 import { dependencies } from './package.json';
@@ -18,7 +18,7 @@ export interface PipelineStackProps extends StackProps {
   repositoryName: string;
   destroyStack?: (account: Account) => boolean;
   manualApprovals?: (account: Account) => boolean;
-  testCommands: (account: Account, useOutputs: Record<string, StackOutput>) => string[];
+  testCommands: (account: Account, cfnOutputs?: Record<string, CfnOutput>) => string[];
 }
 
 export class PipelineStack extends Stack {
@@ -100,7 +100,7 @@ export class PipelineStack extends Stack {
         additionalArtifacts: [sourceArtifact],
         actionName: 'TestCustomStack',
         useOutputs,
-        commands: props.testCommands.call(this, account, useOutputs),
+        commands: props.testCommands.call(this, account, customStage.cfnOutputs),
         runOrder: preprodStage.nextSequentialRunOrder(),
       }), ...(props.destroyStack?.call(this, account) ? [new CloudFormationDeleteStackAction({
         actionName: 'DestroyStack',
