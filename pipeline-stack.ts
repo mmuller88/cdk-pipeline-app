@@ -98,10 +98,11 @@ export class PipelineStack extends Stack {
         useValueOutputs[cfnOutput] = new String(customStage.cfnOutputs[cfnOutput].value);
       }
 
-      preprodStage.addActions(new ShellScriptAction({
+      const testStage = cdkPipeline.addStage('TestCustomStack');
+      testStage.addActions(new ShellScriptAction({
         additionalArtifacts: [sourceArtifact],
         actionName: 'TestCustomStack',
-        // useOutputs,
+        useOutputs,
         // commands: [],
         commands: props.testCommands.call(this, account, useValueOutputs),
         // commands: props.testCommands.call(this, account, customStage.cfnOutputs),
