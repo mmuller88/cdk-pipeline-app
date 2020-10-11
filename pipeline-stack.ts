@@ -98,7 +98,7 @@ export class PipelineStack extends Stack {
         useValueOutputs[cfnOutput] = customStage.cfnOutputs[cfnOutput];
       }
 
-      const testStage = cdkPipeline.addStage('TestCustomStack');
+      const testStage = cdkPipeline.addStage(`TestCustomStack-${account.stage}`);
       testStage.addActions(new ShellScriptAction({
         additionalArtifacts: [sourceArtifact],
         actionName: 'TestCustomStack',
