@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { App, AppProps, CfnOutput, Construct } from '@aws-cdk/core';
+import { App, AppProps, Construct } from '@aws-cdk/core';
 import { CustomStack } from './custom-stack';
 import { Account } from './accountConfig';
 export interface PipelineAppProps extends AppProps {
@@ -10,7 +10,7 @@ export interface PipelineAppProps extends AppProps {
     repositoryName: string;
     destroyStack?: (account: Account) => boolean;
     manualApprovals?: (account: Account) => boolean;
-    testCommands: (account: Account, cfnOutputs: Record<string, CfnOutput>) => string[];
+    testCommands: (account: Account, cfnOutputs: Record<string, string>) => string[];
 }
 export declare class PipelineApp extends App {
     constructor(props: PipelineAppProps);

@@ -1,4 +1,4 @@
-import { App, Stack, StackProps, Construct, CfnOutput } from '@aws-cdk/core';
+import { App, Stack, StackProps, Construct } from '@aws-cdk/core';
 import { Account } from './accountConfig';
 import { CustomStack } from './custom-stack';
 export interface PipelineStackProps extends StackProps {
@@ -8,7 +8,7 @@ export interface PipelineStackProps extends StackProps {
     repositoryName: string;
     destroyStack?: (account: Account) => boolean;
     manualApprovals?: (account: Account) => boolean;
-    testCommands: (account: Account, cfnOutputs: Record<string, CfnOutput>) => string[];
+    testCommands: (account: Account, cfnOutputs: Record<string, string>) => string[];
 }
 export declare class PipelineStack extends Stack {
     constructor(app: App, id: string, props: PipelineStackProps);
