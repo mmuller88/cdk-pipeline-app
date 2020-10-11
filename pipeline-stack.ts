@@ -92,16 +92,17 @@ export class PipelineStack extends Stack {
       const useOutputs: Record<string, StackOutput> = {};
 
       // tslint:disable-next-line: forin
-      // for(const cfnOutput in customStage.cfnOutputs){
-      //   useOutputs[cfnOutput] = cdkPipeline.stackOutput(customStage.cfnOutputs[cfnOutput]);
-      // }
+      for(const cfnOutput in customStage.cfnOutputs){
+        useOutputs[cfnOutput] = cdkPipeline.stackOutput(customStage.cfnOutputs[cfnOutput]);
+      }
 
       preprodStage.addActions(new ShellScriptAction({
         additionalArtifacts: [sourceArtifact],
         actionName: 'TestCustomStack',
         useOutputs,
         // commands: [],
-        commands: props.testCommands.call(this, account, customStage.cfnOutputs),
+        commands: props.testCommands.call(this, account, {}),
+        // commands: props.testCommands.call(this, account, customStage.cfnOutputs),
         runOrder: preprodStage.nextSequentialRunOrder(),
       }), ...(props.destroyStack?.call(this, account) ? [new CloudFormationDeleteStackAction({
         actionName: 'DestroyStack',
