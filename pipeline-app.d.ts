@@ -10,7 +10,7 @@ export interface PipelineAppProps extends AppProps {
     repositoryName: string;
     destroyStack?: (account: Account) => boolean;
     manualApprovals?: (account: Account) => boolean;
-    testCommands: (account: Account, cfnOutputs: Record<string, string>) => string[];
+    testCommands: (account: Account) => string[];
 }
 export declare class PipelineApp extends App {
     constructor(props: PipelineAppProps);

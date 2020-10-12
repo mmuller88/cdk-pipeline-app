@@ -9,6 +9,5 @@ export interface CustomStageProps extends StageProps {
  */
 export declare class CustomStage extends Stage {
     cfnOutputs: Record<string, CfnOutput>;
-    stringOutputs: Record<string, string>;
     constructor(scope: Construct, id: string, props: CustomStageProps, account: Account);
 }
