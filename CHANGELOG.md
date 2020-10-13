@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.7](https://github.com/mmuller88/alf-cdk-app-pipeline/compare/v0.0.6...v0.0.7) (2020-10-13)
+
+
+### Features
+
+* Allow Action to access Stack ([b63369b](https://github.com/mmuller88/alf-cdk-app-pipeline/commit/b63369b8a59f7ff6a7e7da64bb4f16444e48941b))
+* delete stack ([19fbddd](https://github.com/mmuller88/alf-cdk-app-pipeline/commit/19fbddd0225459457f7e904b50065e610b3d4779))
+
 ### [0.0.6](https://github.com/mmuller88/alf-cdk-app-pipeline/compare/v0.0.5...v0.0.6) (2020-10-13)
 
 
