@@ -12,7 +12,6 @@ export interface PipelineAppProps extends AppProps {
   customStack: (scope: Construct, account: Account) => CustomStack;
   branch: string;
   repositoryName: string;
-  destroyStack?: (account: Account) => boolean;
   manualApprovals?: (account: Account) => boolean;
   testCommands: (account: Account) => string[];
 }
@@ -39,7 +38,6 @@ export class PipelineApp extends App {
       branch: props.branch,
       repositoryName: props.repositoryName,
       accounts: props.accounts,
-      destroyStack: props.destroyStack,
       manualApprovals: props.manualApprovals,
       testCommands: props.testCommands,
     };

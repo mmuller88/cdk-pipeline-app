@@ -1,5 +1,5 @@
 import { Artifact, Pipeline } from '@aws-cdk/aws-codepipeline';
-import { CloudFormationDeleteStackAction, GitHubSourceAction } from '@aws-cdk/aws-codepipeline-actions';
+import { GitHubSourceAction } from '@aws-cdk/aws-codepipeline-actions';
 import { App, Stack, StackProps, SecretValue, Tags, Construct } from '@aws-cdk/core';
 import { CdkPipeline, ShellScriptAction, SimpleSynthAction, StackOutput } from "@aws-cdk/pipelines";
 import { AutoDeleteBucket } from '@mobileposse/auto-delete-bucket';
@@ -17,7 +17,6 @@ export interface PipelineStackProps extends StackProps {
   accounts: Account[];
   branch: string;
   repositoryName: string;
-  destroyStack?: (account: Account) => boolean;
   manualApprovals?: (account: Account) => boolean;
   testCommands: (account: Account) => string[];
 }
@@ -111,12 +110,7 @@ export class PipelineStack extends Stack {
         useOutputs,
         commands: testCommands,
         runOrder: preprodStage.nextSequentialRunOrder(),
-      }), ...(props.destroyStack?.call(this, account) ? [new CloudFormationDeleteStackAction({
-        actionName: 'DestroyStack',
-        stackName: `${props.repositoryName}-${account.stage}`,
-        adminPermissions: true,
-        runOrder: preprodStage.nextSequentialRunOrder()
-      })] : []));
+      }));
     }
   }
 }
