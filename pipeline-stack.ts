@@ -7,6 +7,7 @@ import { dependencies } from './package.json';
 import { CustomStage } from './custom-stage';
 import { Account } from './accountConfig';
 import { CustomStack } from './custom-stack';
+import { PolicyStatement } from '@aws-cdk/aws-iam';
 
 
 export interface PipelineStackProps extends StackProps {
@@ -98,11 +99,17 @@ export class PipelineStack extends Stack {
         useOutputs[cfnOutput] = cdkPipeline.stackOutput(customStage.cfnOutputs[cfnOutput]);
       }
 
+      const testCommands = props.testCommands.call(this, account);
+
       preprodStage.addActions(new ShellScriptAction({
+        rolePolicyStatements: [new PolicyStatement({
+          actions: ['*'],
+          resources: ['*'],
+        })],
         additionalArtifacts: [sourceArtifact],
         actionName: 'TestCustomStack',
         useOutputs,
-        commands: props.testCommands.call(this, account),
+        commands: testCommands,
         runOrder: preprodStage.nextSequentialRunOrder(),
       }), ...(props.destroyStack?.call(this, account) ? [new CloudFormationDeleteStackAction({
         actionName: 'DestroyStack',
