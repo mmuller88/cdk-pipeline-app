@@ -12,6 +12,10 @@ export interface PipelineAppProps extends AppProps {
   customStack: (scope: Construct, account: Account) => CustomStack;
   branch: string;
   repositoryName: string;
+  /**
+   * Optional Build Command during the Synth Action
+   */
+  buildCommand?: string;
   manualApprovals?: (account: Account) => boolean;
   testCommands: (account: Account) => string[];
 }
@@ -38,6 +42,7 @@ export class PipelineApp extends App {
       branch: props.branch,
       repositoryName: props.repositoryName,
       accounts: props.accounts,
+      buildCommand: props.buildCommand,
       manualApprovals: props.manualApprovals,
       testCommands: props.testCommands,
     };

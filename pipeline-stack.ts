@@ -17,6 +17,7 @@ export interface PipelineStackProps extends StackProps {
   accounts: Account[];
   branch: string;
   repositoryName: string;
+  buildCommand?: string;
   manualApprovals?: (account: Account) => boolean;
   testCommands: (account: Account) => string[];
 }
@@ -67,7 +68,7 @@ export class PipelineStack extends Stack {
         synthCommand: 'make cdksynthprod',
         // subdirectory: 'cdk',
         // We need a build step to compile the TypeScript Lambda
-        // buildCommand: 'make build && make cdkbuild',
+        buildCommand: props.buildCommand,
       }),
     });
 
@@ -84,7 +85,8 @@ export class PipelineStack extends Stack {
         env: {
           account: account.id,
           region: account.region,
-        }
+        },
+        
       }, account);
 
       // console.log('customStage = ' + customStage);
