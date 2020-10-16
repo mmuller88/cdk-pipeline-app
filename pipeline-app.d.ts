@@ -8,6 +8,10 @@ export interface PipelineAppProps extends AppProps {
     customStack: (scope: Construct, account: Account) => CustomStack;
     branch: string;
     repositoryName: string;
+    /**
+     * Optional Build Command during the Synth Action
+     */
+    buildCommand?: string;
     manualApprovals?: (account: Account) => boolean;
     testCommands: (account: Account) => string[];
 }

@@ -6,6 +6,7 @@ export interface PipelineStackProps extends StackProps {
     accounts: Account[];
     branch: string;
     repositoryName: string;
+    buildCommand?: string;
     manualApprovals?: (account: Account) => boolean;
     testCommands: (account: Account) => string[];
 }
