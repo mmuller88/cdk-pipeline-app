@@ -1,19 +1,19 @@
 #!/usr/bin/env node
 import { App, AppProps, Construct } from '@aws-cdk/core';
 import { CustomStack } from './custom-stack';
-import { Account } from './accountConfig';
+import { Account, StageAccount } from './accountConfig';
 export interface PipelineAppProps extends AppProps {
-    accounts: Account[];
+    stageAccounts: StageAccount[];
     buildAccount: Account;
-    customStack: (scope: Construct, account: Account) => CustomStack;
+    customStack: (scope: Construct, stageAccount: StageAccount) => CustomStack;
     branch: string;
     repositoryName: string;
     /**
      * Optional Build Command during the Synth Action
      */
     buildCommand?: string;
-    manualApprovals?: (account: Account) => boolean;
-    testCommands: (account: Account) => string[];
+    manualApprovals?: (stageAccount: StageAccount) => boolean;
+    testCommands: (stageAccount: StageAccount) => string[];
 }
 export declare class PipelineApp extends App {
     constructor(props: PipelineAppProps);

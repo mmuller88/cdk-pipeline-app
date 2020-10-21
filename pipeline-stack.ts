@@ -5,21 +5,21 @@ import { CdkPipeline, ShellScriptAction, SimpleSynthAction, StackOutput } from "
 import { AutoDeleteBucket } from '@mobileposse/auto-delete-bucket';
 import { dependencies } from './package.json';
 import { CustomStage } from './custom-stage';
-import { Account } from './accountConfig';
+import { StageAccount } from './accountConfig';
 import { CustomStack } from './custom-stack';
 import { PolicyStatement } from '@aws-cdk/aws-iam';
 
 
 export interface PipelineStackProps extends StackProps {
   // customStage: Stage;
-  customStack: (scope: Construct, account: Account) => CustomStack;
+  customStack: (scope: Construct, stageAccount: StageAccount) => CustomStack;
   // customStack: CustomStack;
-  accounts: Account[];
+  stageAccounts: StageAccount[];
   branch: string;
   repositoryName: string;
   buildCommand?: string;
-  manualApprovals?: (account: Account) => boolean;
-  testCommands: (account: Account) => string[];
+  manualApprovals?: (stageAccount: StageAccount) => boolean;
+  testCommands: (stageAccount: StageAccount) => string[];
 }
 
 export class PipelineStack extends Stack {
@@ -73,25 +73,25 @@ export class PipelineStack extends Stack {
     });
 
     // todo: add devAccount later
-    for (const account of props.accounts) {
+    for (const stageAccount of props.stageAccounts) {
 
       // const useValueOutputs2: Record<string, CfnOutput> = {};
 
-      const customStage = new CustomStage(this, `CustomStage-${account.stage}`, {
+      const customStage = new CustomStage(this, `CustomStage-${stageAccount.stage}`, {
         customStack: props.customStack,
         // customStack: (_scope, account) => {
         //   return props.customStack(this, account);
         // },
         env: {
-          account: account.id,
-          region: account.region,
+          account: stageAccount.account.id,
+          region: stageAccount.account.region,
         },
         
-      }, account);
+      }, stageAccount);
 
       // console.log('customStage = ' + customStage);
 
-      const preprodStage = cdkPipeline.addApplicationStage(customStage, { manualApprovals: props.manualApprovals?.call(this, account) });
+      const preprodStage = cdkPipeline.addApplicationStage(customStage, { manualApprovals: props.manualApprovals?.call(this, stageAccount) });
 
       const useOutputs: Record<string, StackOutput> = {};
 
@@ -100,7 +100,7 @@ export class PipelineStack extends Stack {
         useOutputs[cfnOutput] = cdkPipeline.stackOutput(customStage.cfnOutputs[cfnOutput]);
       }
 
-      const testCommands = props.testCommands.call(this, account);
+      const testCommands = props.testCommands.call(this, stageAccount);
 
       preprodStage.addActions(new ShellScriptAction({
         rolePolicyStatements: [new PolicyStatement({

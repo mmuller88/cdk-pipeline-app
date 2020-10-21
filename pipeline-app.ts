@@ -3,21 +3,21 @@ import { App, AppProps, Construct } from '@aws-cdk/core';
 import { PipelineStackProps, PipelineStack } from './pipeline-stack';
 import { CustomStack } from './custom-stack';
 
-import { Account } from './accountConfig';
+import { Account, StageAccount } from './accountConfig';
 
 export interface PipelineAppProps extends AppProps {
   // customStage: Stage;
-  accounts: Account[];
+  stageAccounts: StageAccount[];
   buildAccount: Account;
-  customStack: (scope: Construct, account: Account) => CustomStack;
+  customStack: (scope: Construct, stageAccount: StageAccount) => CustomStack;
   branch: string;
   repositoryName: string;
   /**
    * Optional Build Command during the Synth Action
    */
   buildCommand?: string;
-  manualApprovals?: (account: Account) => boolean;
-  testCommands: (account: Account) => string[];
+  manualApprovals?: (stageAccount: StageAccount) => boolean;
+  testCommands: (stageAccount: StageAccount) => string[];
 }
 
 export class PipelineApp extends App {
@@ -26,8 +26,8 @@ export class PipelineApp extends App {
     // Tags.of(this).add('Project', props.repositoryName);
 
     // tslint:disable-next-line: forin
-    for(const account of props.accounts) {
-      props.customStack.call(this, this, account);
+    for(const stageAccounts of props.stageAccounts) {
+      props.customStack.call(this, this, stageAccounts);
     }
 
     const pipelineStackProps: PipelineStackProps = {
@@ -41,7 +41,7 @@ export class PipelineApp extends App {
       },
       branch: props.branch,
       repositoryName: props.repositoryName,
-      accounts: props.accounts,
+      stageAccounts: props.stageAccounts,
       buildCommand: props.buildCommand,
       manualApprovals: props.manualApprovals,
       testCommands: props.testCommands,

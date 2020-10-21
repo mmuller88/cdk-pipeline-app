@@ -1,5 +1,5 @@
 import { CfnOutput, Construct, Stage, StageProps } from '@aws-cdk/core';
-import { Account } from './accountConfig';
+import { StageAccount } from './accountConfig';
 import { CustomStack } from './custom-stack';
 
 // import { UIStack } from '../alf-cdk-ui/cdk/ui-stack';
@@ -7,7 +7,7 @@ import { CustomStack } from './custom-stack';
 
 export interface CustomStageProps extends StageProps {
   // stackProps: CustomStackProps;
-  customStack: (scope: Construct, account: Account) => CustomStack;
+  customStack: (scope: Construct, stageAccount: StageAccount) => CustomStack;
 }
 /**
  * Deployable unit of web service app
@@ -15,10 +15,10 @@ export interface CustomStageProps extends StageProps {
 export class CustomStage extends Stage {
   cfnOutputs: Record<string, CfnOutput> = {};
 
-  constructor(scope: Construct, id: string, props: CustomStageProps, account: Account) {
+  constructor(scope: Construct, id: string, props: CustomStageProps, stageAccount: StageAccount) {
     super(scope, id, props);
 
-    const customStack = props.customStack.call(this, this, account);
+    const customStack = props.customStack.call(this, this, stageAccount);
 
     // tslint:disable-next-line: forin
     for(const key in customStack.cfnOutputs){

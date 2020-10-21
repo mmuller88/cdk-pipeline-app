@@ -1,12 +1,15 @@
 export declare const sharedProdAccountProps: SharedAccountProps;
 export declare const sharedDevAccountProps: SharedAccountProps;
+export interface StageAccount {
+    account: Account;
+    stage: string;
+}
 export interface Account {
     id: string;
     region: string;
-    stage: string;
 }
 export interface SharedAccountProps {
-    account: Account;
+    stageAccount: StageAccount;
     domainName: string;
     subDomain: string;
     acmCertRef: string;
