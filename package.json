@@ -1,6 +1,6 @@
 {
   "name": "alf-cdk-app-pipeline",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "main": "app.js",
   "types": "app.d.ts",
   "private": true,

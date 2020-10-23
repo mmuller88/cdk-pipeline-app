@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.8](https://github.com/mmuller88/alf-cdk-app-pipeline/compare/v0.0.7...v0.0.8) (2020-10-23)
+
+
+### Features
+
+* account and stageaccount ([ff507cd](https://github.com/mmuller88/alf-cdk-app-pipeline/commit/ff507cdd31d9c1ccafa5e100787810524538ab35))
+* optional Build Command ([1de510e](https://github.com/mmuller88/alf-cdk-app-pipeline/commit/1de510ecada0d1b4fc82b9f70fa9eede0eef5d4e))
+* optional Build Command ([e4c7fc9](https://github.com/mmuller88/alf-cdk-app-pipeline/commit/e4c7fc9b90cdd7115aaaf7007ba3978d0689fe31))
+* optional Build Command ([5127a61](https://github.com/mmuller88/alf-cdk-app-pipeline/commit/5127a610e22c52a38b8dad6e633487bdc17927d1))
+* update cdk ([087a5e2](https://github.com/mmuller88/alf-cdk-app-pipeline/commit/087a5e22abdffd5ff59e9c9115d66ddde55ef9c1))
+* update cdk ([45147d4](https://github.com/mmuller88/alf-cdk-app-pipeline/commit/45147d4d77fa76ee7e84ec00ae51e198a1ca011b))
+* update cdk ([9656749](https://github.com/mmuller88/alf-cdk-app-pipeline/commit/9656749ac136fae4cab9eb9f9adbf2ff5105210c))
+* update cdk ([c7c7a8f](https://github.com/mmuller88/alf-cdk-app-pipeline/commit/c7c7a8fe264e168233c6d6c5c47c154281f7271f))
+
 ### [0.0.7](https://github.com/mmuller88/alf-cdk-app-pipeline/compare/v0.0.6...v0.0.7) (2020-10-13)
 
 
