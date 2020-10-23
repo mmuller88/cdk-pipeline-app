@@ -8,8 +8,9 @@
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
-    "version": "standard-version",
-    "versionAsMinor": "standard-version --release-as minor"
+    "no-changes": "(git log --oneline -1 | grep -q \"chore(release):\") && echo \"No changes to release.\"",
+    "bump": "yarn run --silent no-changes || standard-version",
+    "release": "yarn run --silent no-changes || (yarn run bump && git push --follow-tags origin master)"
   },
   "dependencies": {
     "@aws-cdk/aws-cloudfront": "1.69.0",
