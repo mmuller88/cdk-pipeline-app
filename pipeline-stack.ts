@@ -64,8 +64,8 @@ export class PipelineStack extends Stack {
       synthAction: SimpleSynthAction.standardNpmSynth({
         sourceArtifact,
         cloudAssemblyArtifact,
-        installCommand: `npm install && npm install -g aws-cdk@${dependencies['@aws-cdk/core']}`,
-        synthCommand: `make cdksynth STAGE=prod`,
+        installCommand: `yarn install && yarn install -g aws-cdk@${dependencies['@aws-cdk/core']}`,
+        synthCommand: `yarn run cdksynth`,
         // subdirectory: 'cdk',
         // We need a build step to compile the TypeScript Lambda
         buildCommand: props.buildCommand,
