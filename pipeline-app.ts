@@ -49,7 +49,7 @@ export class PipelineApp extends App {
     console.info(`pipelineStackProps: ${JSON.stringify(pipelineStackProps, null, 2)}`);
 
     // tslint:disable-next-line: no-unused-expression
-    new PipelineStack(this, `${props.repositoryName}-pipeline-stack-build`, pipelineStackProps);
+    new PipelineStack(this, `${props.repositoryName}-pipeline`, pipelineStackProps);
     this.synth();
   }
 }
