@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.9](https://github.com/mmuller88/alf-cdk-app-pipeline/compare/v0.0.8...v0.0.9) (2020-10-31)
+
+
+### Features
+
+* update cdk libs ([766e4c8](https://github.com/mmuller88/alf-cdk-app-pipeline/commit/766e4c8e34e30f591100f441b57be84decba7e85))
+
 ### [0.0.8](https://github.com/mmuller88/alf-cdk-app-pipeline/compare/v0.0.7...v0.0.8) (2020-10-23)
 
 
