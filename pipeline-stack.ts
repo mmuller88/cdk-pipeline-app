@@ -1,14 +1,25 @@
-import { Artifact, Pipeline } from '@aws-cdk/aws-codepipeline';
-import { GitHubSourceAction } from '@aws-cdk/aws-codepipeline-actions';
-import { App, Stack, StackProps, SecretValue, Tags, Construct } from '@aws-cdk/core';
-import { CdkPipeline, ShellScriptAction, SimpleSynthAction, StackOutput } from "@aws-cdk/pipelines";
-import { AutoDeleteBucket } from '@mobileposse/auto-delete-bucket';
-import { dependencies } from './package.json';
-import { CustomStage } from './custom-stage';
-import { StageAccount } from './accountConfig';
-import { CustomStack } from './custom-stack';
-import { PolicyStatement } from '@aws-cdk/aws-iam';
-
+import { Artifact, Pipeline } from "@aws-cdk/aws-codepipeline";
+import { GitHubSourceAction } from "@aws-cdk/aws-codepipeline-actions";
+import {
+  App,
+  Stack,
+  StackProps,
+  SecretValue,
+  Tags,
+  Construct,
+} from "@aws-cdk/core";
+import {
+  CdkPipeline,
+  ShellScriptAction,
+  SimpleSynthAction,
+  StackOutput,
+} from "@aws-cdk/pipelines";
+import { AutoDeleteBucket } from "@mobileposse/auto-delete-bucket";
+import { dependencies } from "./package.json";
+import { CustomStage } from "./custom-stage";
+import { StageAccount } from "./accountConfig";
+import { CustomStack } from "./custom-stack";
+import { PolicyStatement } from "@aws-cdk/aws-iam";
 
 export interface PipelineStackProps extends StackProps {
   // customStage: Stage;
@@ -18,6 +29,7 @@ export interface PipelineStackProps extends StackProps {
   branch: string;
   repositoryName: string;
   buildCommand?: string;
+  gitHub: { owner: string; oauthToken: SecretValue };
   manualApprovals?: (stageAccount: StageAccount) => boolean;
   testCommands: (stageAccount: StageAccount) => string[];
 }
@@ -26,17 +38,17 @@ export class PipelineStack extends Stack {
   constructor(app: App, id: string, props: PipelineStackProps) {
     super(app, id, props);
 
-    Tags.of(this).add('PipelineStack', this.stackName);
+    Tags.of(this).add("PipelineStack", this.stackName);
 
-    const oauth = SecretValue.secretsManager('alfcdk', {
-      jsonField: 'muller88-github-token',
-    });
+    // const oauth = SecretValue.secretsManager('alfcdk', {
+    //   jsonField: 'muller88-github-token',
+    // });
 
-    const sourceBucket = new AutoDeleteBucket(this, 'PipeBucket', {
+    const sourceBucket = new AutoDeleteBucket(this, "PipeBucket", {
       versioned: true,
     });
 
-    const pipeline = new Pipeline(this, 'Pipeline', {
+    const pipeline = new Pipeline(this, "Pipeline", {
       artifactBucket: sourceBucket,
       restartExecutionOnUpdate: true,
     });
@@ -44,7 +56,7 @@ export class PipelineStack extends Stack {
     const sourceArtifact = new Artifact();
     const cloudAssemblyArtifact = new Artifact();
 
-    const cdkPipeline = new CdkPipeline(this, 'CdkPipeline', {
+    const cdkPipeline = new CdkPipeline(this, "CdkPipeline", {
       // The pipeline name
       // pipelineName: `${this.stackName}-pipeline`,
       cloudAssemblyArtifact,
@@ -52,11 +64,11 @@ export class PipelineStack extends Stack {
 
       // Where the source can be found
       sourceAction: new GitHubSourceAction({
-        actionName: 'GithubSource',
+        actionName: "GithubSource",
         branch: props.branch,
-        owner: 'mmuller88',
+        owner: props.gitHub.owner,
         repo: props.repositoryName,
-        oauthToken: oauth,
+        oauthToken: props.gitHub.oauthToken,
         output: sourceArtifact,
       }),
 
@@ -64,7 +76,7 @@ export class PipelineStack extends Stack {
       synthAction: SimpleSynthAction.standardNpmSynth({
         sourceArtifact,
         cloudAssemblyArtifact,
-        installCommand: `yarn install && yarn global add aws-cdk@${dependencies['@aws-cdk/core']}`,
+        installCommand: `yarn install && yarn global add aws-cdk@${dependencies["@aws-cdk/core"]}`,
         synthCommand: `yarn run cdksynth`,
         // subdirectory: 'cdk',
         // We need a build step to compile the TypeScript Lambda
@@ -74,45 +86,56 @@ export class PipelineStack extends Stack {
 
     // todo: add devAccount later
     for (const stageAccount of props.stageAccounts) {
-
       // const useValueOutputs2: Record<string, CfnOutput> = {};
 
-      const customStage = new CustomStage(this, `CustomStage-${stageAccount.stage}`, {
-        customStack: props.customStack,
-        // customStack: (_scope, account) => {
-        //   return props.customStack(this, account);
-        // },
-        env: {
-          account: stageAccount.account.id,
-          region: stageAccount.account.region,
+      const customStage = new CustomStage(
+        this,
+        `CustomStage-${stageAccount.stage}`,
+        {
+          customStack: props.customStack,
+          // customStack: (_scope, account) => {
+          //   return props.customStack(this, account);
+          // },
+          env: {
+            account: stageAccount.account.id,
+            region: stageAccount.account.region,
+          },
         },
-        
-      }, stageAccount);
+        stageAccount
+      );
 
       // console.log('customStage = ' + customStage);
 
-      const preprodStage = cdkPipeline.addApplicationStage(customStage, { manualApprovals: props.manualApprovals?.call(this, stageAccount) });
+      const preprodStage = cdkPipeline.addApplicationStage(customStage, {
+        manualApprovals: props.manualApprovals?.call(this, stageAccount),
+      });
 
       const useOutputs: Record<string, StackOutput> = {};
 
       // tslint:disable-next-line: forin
-      for(const cfnOutput in customStage.cfnOutputs){
-        useOutputs[cfnOutput] = cdkPipeline.stackOutput(customStage.cfnOutputs[cfnOutput]);
+      for (const cfnOutput in customStage.cfnOutputs) {
+        useOutputs[cfnOutput] = cdkPipeline.stackOutput(
+          customStage.cfnOutputs[cfnOutput]
+        );
       }
 
       const testCommands = props.testCommands.call(this, stageAccount);
 
-      preprodStage.addActions(new ShellScriptAction({
-        rolePolicyStatements: [new PolicyStatement({
-          actions: ['*'],
-          resources: ['*'],
-        })],
-        additionalArtifacts: [sourceArtifact],
-        actionName: 'TestCustomStack',
-        useOutputs,
-        commands: testCommands,
-        runOrder: preprodStage.nextSequentialRunOrder(),
-      }));
+      preprodStage.addActions(
+        new ShellScriptAction({
+          rolePolicyStatements: [
+            new PolicyStatement({
+              actions: ["*"],
+              resources: ["*"],
+            }),
+          ],
+          additionalArtifacts: [sourceArtifact],
+          actionName: "TestCustomStack",
+          useOutputs,
+          commands: testCommands,
+          runOrder: preprodStage.nextSequentialRunOrder(),
+        })
+      );
     }
   }
 }

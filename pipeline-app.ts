@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-import { App, AppProps, Construct } from '@aws-cdk/core';
-import { PipelineStackProps, PipelineStack } from './pipeline-stack';
-import { CustomStack } from './custom-stack';
+import { App, AppProps, Construct, SecretValue } from "@aws-cdk/core";
+import { PipelineStackProps, PipelineStack } from "./pipeline-stack";
+import { CustomStack } from "./custom-stack";
 
-import { Account, StageAccount } from './accountConfig';
+import { Account, StageAccount } from "./accountConfig";
 
 export interface PipelineAppProps extends AppProps {
   // customStage: Stage;
@@ -16,6 +16,10 @@ export interface PipelineAppProps extends AppProps {
    * Optional Build Command during the Synth Action
    */
   buildCommand?: string;
+  /**
+   * Access credentials for using the pipe with github. Other git providers are currently not supported.
+   */
+  gitHub: { owner: string; oauthToken: SecretValue };
   manualApprovals?: (stageAccount: StageAccount) => boolean;
   testCommands: (stageAccount: StageAccount) => string[];
 }
@@ -26,7 +30,7 @@ export class PipelineApp extends App {
     // Tags.of(this).add('Project', props.repositoryName);
 
     // tslint:disable-next-line: forin
-    for(const stageAccounts of props.stageAccounts) {
+    for (const stageAccounts of props.stageAccounts) {
       props.customStack.call(this, this, stageAccounts);
     }
 
@@ -43,13 +47,20 @@ export class PipelineApp extends App {
       repositoryName: props.repositoryName,
       stageAccounts: props.stageAccounts,
       buildCommand: props.buildCommand,
+      gitHub: props.gitHub,
       manualApprovals: props.manualApprovals,
       testCommands: props.testCommands,
     };
-    console.info(`pipelineStackProps: ${JSON.stringify(pipelineStackProps, null, 2)}`);
+    console.info(
+      `pipelineStackProps: ${JSON.stringify(pipelineStackProps, null, 2)}`
+    );
 
     // tslint:disable-next-line: no-unused-expression
-    new PipelineStack(this, `${props.repositoryName}-pipeline`, pipelineStackProps);
+    new PipelineStack(
+      this,
+      `${props.repositoryName}-pipeline`,
+      pipelineStackProps
+    );
     this.synth();
   }
 }

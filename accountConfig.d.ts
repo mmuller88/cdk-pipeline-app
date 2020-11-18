@@ -1,5 +1,3 @@
-export declare const sharedProdAccountProps: SharedAccountProps;
-export declare const sharedDevAccountProps: SharedAccountProps;
 export interface StageAccount {
     account: Account;
     stage: string;
